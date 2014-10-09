@@ -1,0 +1,31 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.oldrain.player.ListActivity">
+
+    <RelativeLayout
+        android:id="@+id/top"
+        android:background="@color/top_bar"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:id="@+id/backup"
+            android:layout_alignParentLeft="true"
+            android:paddingLeft="10dp"
+            android:background="#00000000"
+            android:src="@drawable/back_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <ImageButton
+            android:id="@+id/sync"
+            android:background="#00000000"
+            android:src="@drawable/music_sync"
+            android:padding="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+</RelativeLayout>

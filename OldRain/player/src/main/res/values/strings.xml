@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">OldRain</string>
+    <string name="song_list">我的音乐</string>
+    <string name="music_hall">MusicHall</string>
+    <string name="search">发现</string>
+    <string name="more">更多</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_list">ListActivity</string>
+    <string name="hello_world">Hello world!</string>
+
+</resources>
