@@ -23,10 +23,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.example.oldrain.player.ListActivity"
-            android:label="@string/title_activity_list" >
-        </activity>
         <service android:name=".MusicPlayer"
                  android:label="MusicPlayer"/>
     </application>

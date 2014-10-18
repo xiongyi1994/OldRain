@@ -22,7 +22,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
 public class MainActivity extends FragmentActivity implements  OnGestureListener, OnTouchListener {
 
     private FrameLayout fragmentLayout;
@@ -39,7 +38,7 @@ public class MainActivity extends FragmentActivity implements  OnGestureListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_layout);
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //stickIn = new StickIn("just");
+        stickIn = new StickIn("just");
         //stickIn.writeToSDcardFile("record.txt", "OldRain", "MainAcitivity Create" + "\n");
         fragmentLayout = (FrameLayout) findViewById(R.id.homepage);
         fragmentLayout.setOnTouchListener(this);
@@ -248,6 +247,7 @@ public class MainActivity extends FragmentActivity implements  OnGestureListener
     @Override
     public void onDestroy(){
         unregisterReceiver(mainReceiver);
+        stickIn.writeToSDcardFile("record.txt", "OldRain", "MainAcitivity Destroy" + "\n");
         super.onDestroy();
     }
 }
