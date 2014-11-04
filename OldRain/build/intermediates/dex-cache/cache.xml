@@ -2,16 +2,16 @@
 <pre-dex-items>
 
     <item
-        dex="D:\AndroidStudioProjects\OldRain\OldRain\player\build\intermediates\pre-dexed\debug\classes-a220f528c9f10f0dded43f215dfa0909cffe3dec.jar"
-        jar="D:\AndroidStudioProjects\OldRain\OldRain\player\build\intermediates\exploded-aar\com.android.support\appcompat-v7\19.0.1\classes.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="f71a6822470c9eb659d4f4a6cb57b780b35f058b"/>
-    <item
-        dex="D:\AndroidStudioProjects\OldRain\OldRain\player\build\intermediates\pre-dexed\debug\support-v4-19.0.1-b0cf7f9029c1075d699c42697d898625f22dfe83.jar"
-        jar="E:\android-studio\sdk\extras\android\m2repository\com\android\support\support-v4\19.0.1\support-v4-19.0.1.jar"
+        dex="D:\AndroidStudioProjects\OldRain\OldRain\app\build\intermediates\pre-dexed\debug\support-v4-19.0.1-dd1f3e6dcadfa53e68f21323ef0e958c18d8cd0e.jar"
+        jar="E:\软件\android-studio-ide-135.1525417-windows\android-studio\sdk\extras\android\m2repository\com\android\support\support-v4\19.0.1\support-v4-19.0.1.jar"
         jumboMode="false"
         revision="19.1.0"
         sha1="587da9a481ffd341d2fa091704489b89845ddacd"/>
+    <item
+        dex="D:\AndroidStudioProjects\OldRain\OldRain\app\build\intermediates\pre-dexed\debug\classes-4798cb06c22a0f4637101c5ce7bbc72a9837293e.jar"
+        jar="D:\AndroidStudioProjects\OldRain\OldRain\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\19.0.1\classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="f71a6822470c9eb659d4f4a6cb57b780b35f058b"/>
 
 </pre-dex-items>

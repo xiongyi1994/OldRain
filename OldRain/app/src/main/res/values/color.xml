@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="item_pressed_color">#ff4500</color>
+    <color name="item_release_color">#ffffff</color>
+    <color name="transparent">#00000000</color>
+    <color name="loved">#ff4500</color>
+    <color name="loved_tra">#aaff4500</color>
+    <color name="download_false">#4d4d4d</color>
+    <color name="side_titel">#b0b0b0</color>
+    <color name="bottom_bar">#1a1a1a</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="top_bar">#15000000</color>
+    <color name="divider">#20000000</color>
+</resources>

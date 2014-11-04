@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:descendantFocusability="blocksDescendants">
+
+    <ImageButton
+        android:id="@+id/icon"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/music_all"
+        android:background="@color/transparent"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="20dp"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <ImageButton
+        android:id="@+id/right_arrow"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/arrow_right"
+        android:layout_marginRight="10dp"
+        android:background="@color/transparent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/side_title"
+        android:layout_marginRight="10dp"
+        android:textColor="@color/side_titel"
+        android:layout_toLeftOf="@id/right_arrow"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:textSize="12sp"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/four"
+        android:layout_toRightOf="@id/icon"
+        android:layout_toLeftOf="@id/side_title"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:singleLine="true"
+        android:ellipsize="end"/>
+</RelativeLayout>

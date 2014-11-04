@@ -1,1 +1,1 @@
-include ':player'
+include ':app'
