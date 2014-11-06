@@ -50,68 +50,17 @@
             android:layout_height="wrap_content"/>
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/three"
+    <include layout="@layout/bottom_bar"
+        android:id="@+id/threes"
         android:layout_alignParentBottom="true"
-        android:background="@color/bottom_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageButton
-            android:id="@+id/song_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:src="@drawable/ic_launcher"
-            android:layout_marginLeft="10dp"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"/>
-        <ImageButton
-            android:id="@+id/play_pause"
-            android:layout_alignParentRight="true"
-            android:paddingRight="10dp"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:src="@drawable/play"
-            android:background="#00000000"/>
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/play_pause"
-            android:layout_toRightOf="@id/song_image"
-            android:paddingLeft="15dp"
-            android:paddingRight="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/song_names"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:text="不潮不用花钱"
-                android:textColor="@color/loved"
-                android:singleLine="true"
-                android:ellipsize="end"/>
-            <TextView
-                android:id="@+id/singers"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:text="林俊杰"
-                android:textColor="@color/loved_tra"
-                android:singleLine="true"
-                android:ellipsize="end"/>
-        </LinearLayout>
-    </RelativeLayout>
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:id="@+id/two"
         android:orientation="vertical"
         android:layout_below="@id/one"
-        android:layout_above="@id/three"
+        android:layout_above="@id/threes"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/top_bar">

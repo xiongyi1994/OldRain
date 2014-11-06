@@ -1,21 +1,13 @@
 package com.example.oldrain.player.fragments;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -33,14 +25,16 @@ import java.util.HashMap;
 
 /**
  * Created by Administrator on 14-7-24.
+ * show the several song list
  */
 public class TotalListFragment extends ListFragment{
     Activity home_activity;
     ListView listView;
     StickIn stickIn;
     private LinearLayout song_list, music_hall, search, more;
-    private ImageButton song_list_button, music_hall_button, search_button, more_button;
-    private TextView song_list_text, music_hall_text, search_text, more_text;
+    private ImageButton song_list_button, music_hall_button, search_button, more_button, song_image,
+            play_pause;
+    private TextView song_list_text, music_hall_text, search_text, more_text, song_name, singer;;
 
     @Override
     public void onAttach(Activity activity){
@@ -79,11 +73,6 @@ public class TotalListFragment extends ListFragment{
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        if(!MidValue.service_run){
-            Intent intents = new Intent(home_activity, MusicPlayer.class);
-            home_activity.startService(intents);
-            MidValue.service_run = true;
-        }
 
         Intent intent = new Intent();
         switch(position){
@@ -141,10 +130,6 @@ public class TotalListFragment extends ListFragment{
 
     @Override
     public void onDestroy(){
-        if(MidValue.PlayedOne){
-            Intent intents = new Intent(home_activity, MusicPlayer.class);
-            home_activity.stopService(intents);
-        }
         //stickIn.writeToSDcardFile("record.txt", "OldRain", "TotalFragment Destroy" + "\n");
         super.onDestroy();
     }
@@ -154,7 +139,52 @@ public class TotalListFragment extends ListFragment{
         music_hall = (LinearLayout) view.findViewById(R.id.music_hall);
         search = (LinearLayout) view.findViewById(R.id.search);
         more = (LinearLayout) view.findViewById(R.id.more);
+        song_image = (ImageButton) view.findViewById(R.id.song_image);
 
+        play_pause = (ImageButton) view.findViewById(R.id.play_pause);
+        if(MidValue.Playing){
+            play_pause.setImageDrawable(home_activity.getResources().getDrawable(R.drawable.pause));
+        }else{
+            play_pause.setImageDrawable(home_activity.getResources().getDrawable(R.drawable.play));
+        }
+        play_pause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(MidValue.Playing){
+                    play_pause.setImageDrawable(home_activity.getResources().getDrawable(R.drawable.play));
+                    Intent intent = new Intent();
+                    intent.putExtra("path", MidValue.Cur_SongPath);
+                    intent.putExtra("tag", "pause");
+                    intent.setAction("com.example.oldrain.player.MusicPlayer");
+                    home_activity.sendBroadcast(intent);
+                    MidValue.Playing = false;
+                } else{
+                    play_pause.setImageDrawable(home_activity.getResources().getDrawable(R.drawable.pause));
+                    Intent intent = new Intent();
+                    intent.putExtra("path", MidValue.Cur_SongPath);
+                    intent.putExtra("tag", "play");
+                    intent.setAction("com.example.oldrain.player.MusicPlayer");
+                    home_activity.sendBroadcast(intent);
+                    MidValue.Playing = true;
+                }
+            }
+        });
+
+        song_name = (TextView) view.findViewById(R.id.song_names);
+        singer = (TextView) view.findViewById(R.id.singers);
+        song_name.setText(MidValue.Cur_SongName);
+        singer.setText(MidValue.Cur_Singer);
+
+        song_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.putExtra("tag", MidValue.LYRIC);
+                intent.putExtra("oldtag", MidValue.SONG_TAG);
+                intent.setAction("com.example.oldrain.player.MainActivity");
+                home_activity.sendBroadcast(intent);
+            }
+        });
         music_hall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

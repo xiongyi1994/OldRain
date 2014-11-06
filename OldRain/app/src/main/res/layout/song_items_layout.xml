@@ -6,48 +6,67 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:descendantFocusability="blocksDescendants">
-    <Button
-        android:id="@+id/play_tag"
-        android:layout_width="5dp"
-        android:layout_height="match_parent"
-        android:background="@color/loved"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"/>
-    <ImageButton
-        android:id="@+id/favor_tag"
-        android:layout_alignParentRight="true"
-        android:paddingRight="10dp"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:src="@drawable/favor_false"
-        android:background="#00000000"/>
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@id/favor_tag"
-        android:layout_toRightOf="@id/play_tag"
-        android:paddingLeft="15dp"
-        android:paddingRight="10dp"
+    <RelativeLayout
+        android:id="@+id/main_song_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/song_name"
+        <Button
+            android:id="@+id/play_tag"
+            android:layout_width="5dp"
+            android:layout_height="match_parent"
+            android:background="@color/loved"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"/>
+        <ImageButton
+            android:id="@+id/list_more"
+            android:layout_alignParentRight="true"
+            android:padding="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:singleLine="true"
-            android:ellipsize="end"/>
-        <TextView
-            android:id="@+id/singer"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_action_song_more"
+            android:background="#00000000"/>
+        <ImageButton
+            android:id="@+id/favor_tag"
+            android:layout_toLeftOf="@id/list_more"
+            android:padding="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="@color/side_titel"
-            android:singleLine="true"
-            android:ellipsize="end"/>
-    </LinearLayout>
+            android:layout_centerVertical="true"
+            android:src="@drawable/favor_false"
+            android:background="#00000000"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/favor_tag"
+            android:layout_toRightOf="@id/play_tag"
+            android:paddingLeft="15dp"
+            android:paddingRight="10dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/song_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:singleLine="true"
+                android:ellipsize="end"/>
+            <TextView
+                android:id="@+id/singer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/side_titel"
+                android:singleLine="true"
+                android:ellipsize="end"/>
+        </LinearLayout>
+    </RelativeLayout>
 
+    <include layout="@layout/song_more"
+        android:layout_below="@id/main_song_item"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </RelativeLayout>

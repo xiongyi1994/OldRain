@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.example.oldrain.player.DataBase;
 import com.example.oldrain.player.MidValue;
@@ -30,6 +31,7 @@ import java.util.HashMap;
 
 /**
  * Created by Administrator on 14-7-23.
+ * show the song list
  */
 public class SongListFragment extends ListFragment {
 
@@ -39,7 +41,8 @@ public class SongListFragment extends ListFragment {
     SongListAdapter listItemAdapter;
     DataBase dataBase;
     StickIn stickIn;
-    ImageButton backup, sync, play_model;
+    ImageButton backup, sync, play_model, song_image, play_pause;
+    TextView song_name, singer;
 
     @Override
     public void onAttach(Activity activity){
@@ -91,12 +94,57 @@ public class SongListFragment extends ListFragment {
                 false);
 
         list = (ListView) home_activity.findViewById(android.R.id.list);
-
         searchPath = Environment.getExternalStorageDirectory().toString();
         backup = (ImageButton) rootView.findViewById(R.id.backup);
         sync = (ImageButton) rootView.findViewById(R.id.sync);
         play_model = (ImageButton) rootView.findViewById(R.id.model);
         setImage();
+
+        play_pause = (ImageButton) rootView.findViewById(R.id.play_pause);
+        if(MidValue.Playing){
+            play_pause.setImageDrawable(home_activity.getResources().getDrawable(R.drawable.pause));
+        }else{
+            play_pause.setImageDrawable(home_activity.getResources().getDrawable(R.drawable.play));
+        }
+        play_pause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(MidValue.Playing){
+                    play_pause.setImageDrawable(home_activity.getResources().getDrawable(R.drawable.play));
+                    Intent intent = new Intent();
+                    intent.putExtra("path", MidValue.Cur_SongPath);
+                    intent.putExtra("tag", "pause");
+                    intent.setAction("com.example.oldrain.player.MusicPlayer");
+                    home_activity.sendBroadcast(intent);
+                    MidValue.Playing = false;
+                } else{
+                    play_pause.setImageDrawable(home_activity.getResources().getDrawable(R.drawable.pause));
+                    Intent intent = new Intent();
+                    intent.putExtra("path", MidValue.Cur_SongPath);
+                    intent.putExtra("tag", "play");
+                    intent.setAction("com.example.oldrain.player.MusicPlayer");
+                    home_activity.sendBroadcast(intent);
+                    MidValue.Playing = true;
+                }
+            }
+        });
+
+        song_name = (TextView) rootView.findViewById(R.id.song_names);
+        singer = (TextView) rootView.findViewById(R.id.singers);
+        song_name.setText(MidValue.Cur_SongName);
+        singer.setText(MidValue.Cur_Singer);
+        song_image = (ImageButton) rootView.findViewById(R.id.song_image);
+
+        song_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.putExtra("tag", MidValue.LYRIC);
+                intent.putExtra("oldtag", MidValue.frag_tag);
+                intent.setAction("com.example.oldrain.player.MainActivity");
+                home_activity.sendBroadcast(intent);
+            }
+        });
 
         backup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,11 +159,11 @@ public class SongListFragment extends ListFragment {
         sync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sync.setImageDrawable(getResources().getDrawable(R.drawable.music_sync_disabled));
-
                 SongManager local_music = new SongManager(searchPath, home_activity);
+                local_music.refreshFromSysDB();
                 MidValue.local_song.clear();
-                MidValue.local_song.addAll(local_music.oneKey(new File(searchPath), ".mp3"));
+                MidValue.local_song.addAll(dataBase.getData());
+                //MidValue.local_song.addAll(local_music.oneKey(new File(searchPath), ".mp3"));
                 listItemAdapter.notifyDataSetChanged();
             }
         });
@@ -156,18 +204,21 @@ public class SongListFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-        if(position != MidValue.PlayerPosition){
+
+
+        if(!MidValue.local_song.get(position).get("path").equals(MidValue.Cur_SongPath)){
             if(MidValue.PlayedOne){
                 changePlayTag(position, true);
 
-                changePlayTag(MidValue.PlayerPosition, false);
+                if(MidValue.PlayerPosition < MidValue.local_song.size())
+                    changePlayTag(MidValue.PlayerPosition, false);
             }else{
                 changePlayTag(position, true);
             }
             listItemAdapter.notifyDataSetChanged();
         }/**/
 
-        if(position != MidValue.PlayerPosition){
+        if(!MidValue.local_song.get(position).get("path").equals(MidValue.Cur_SongPath)){
             Intent intent = new Intent();
             intent.putExtra("path", MidValue.local_song.get(position).get("path").toString());
             intent.putExtra("tag", "other");
@@ -194,6 +245,16 @@ public class SongListFragment extends ListFragment {
             }
         }
         MidValue.PlayerPosition = position;
+
+        if(MidValue.Playing){
+            play_pause.setImageDrawable(home_activity.getResources().getDrawable(R.drawable.pause));
+        }else{
+            play_pause.setImageDrawable(home_activity.getResources().getDrawable(R.drawable.play));
+        }
+
+        ToolClass.changeCurSongInfo(position);
+        song_name.setText(MidValue.Cur_SongName);
+        singer.setText(MidValue.Cur_Singer);
     }
 
     void changePlayTag(int position, boolean toTrue){

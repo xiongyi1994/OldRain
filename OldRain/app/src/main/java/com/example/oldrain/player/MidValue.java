@@ -19,7 +19,8 @@ public class MidValue {
 
     //Fragment 的标志
     final public static int SONG_TAG = 1, MUSICHALL_TAG = 2, SEARCH_TAG = 3, MORE_TAG = 4,
-            LOVELIST = 511, LOCALLIST = 512, DOWNLOADLIST = 513, BACK_SONGLIST = 50;
+            LOVELIST = 511, LOCALLIST = 512, DOWNLOADLIST = 513, BACK_SONGLIST = 50,
+            LYRIC = 6, LYRIC_BACK = 60;
 
     public static ArrayList<HashMap<String, Object>> local_song;//歌曲列表
 
@@ -27,4 +28,10 @@ public class MidValue {
     final public static int LOOP_MODEL = 1, RANDOM_MODEL = 0, ONELOOP_MODEL = 2, JUSTONE_MODEL = 3;
 
     final public static String ShareName = "SHARE";
+
+    public static int FRAG_SWITCH_MODEL = MidValue.FADE_IN_OUT;
+    final public static int FADE_IN_OUT = 0, UP_OUT_FADE = 1, LEFT_OUT_RIGHT_IN = 2;
+
+    public static String Cur_SongName = "unknown", Cur_Singer = "unknown", Cur_SongPath = "unknown";
+
 }

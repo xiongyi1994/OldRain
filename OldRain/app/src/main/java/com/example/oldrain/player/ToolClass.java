@@ -70,16 +70,40 @@ public class ToolClass {
         }
         return flag;
     }
+
+    public static void changeCurSongInfo(int position){
+        MidValue.Cur_SongPath = MidValue.local_song.get(position).get("path").toString();
+        MidValue.Cur_Singer = MidValue.local_song.get(position).get("singer").toString();
+        MidValue.Cur_SongName = MidValue.local_song.get(position).get("name").toString();
+    }
     public static void switchContent(Fragment from, Fragment to, int tag, FragmentManager fragmentManager) {
-        if (true) {
-            // mContent = to;
-            FragmentTransaction transaction = fragmentManager.beginTransaction().setCustomAnimations(
-                    android.R.anim.fade_in, android.R.anim.fade_out);
-            if (!to.isAdded()) {    // 先判断是否被add过
+        // mContent = to;
+        FragmentTransaction transaction = null;
+        switch (MidValue.FRAG_SWITCH_MODEL){
+            case MidValue.FADE_IN_OUT:
+                transaction = fragmentManager.beginTransaction().setCustomAnimations(
+                        android.R.anim.fade_in, android.R.anim.fade_out);
+                break;
+            case MidValue.LEFT_OUT_RIGHT_IN:
+                transaction = fragmentManager.beginTransaction().setCustomAnimations(
+                        android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                break;
+            case MidValue.UP_OUT_FADE:
+                transaction = fragmentManager.beginTransaction().setCustomAnimations(
+                        android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                break;
+        }
+
+        if (!to.isAdded()) {    // 先判断是否被add过
+            if (transaction != null) {
                 transaction.hide(from).add(R.id.homepage, to, tag+""); // 隐藏当前的fragment，add下一个到Activity中
-            } else {
+            }
+        } else {
+            if (transaction != null) {
                 transaction.hide(from).show(to); // 隐藏当前的fragment，显示下一个
             }
+        }
+        if (transaction != null) {
             transaction.commit();
         }
     }

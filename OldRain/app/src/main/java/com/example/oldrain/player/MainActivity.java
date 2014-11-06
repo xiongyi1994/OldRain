@@ -23,6 +23,7 @@ import android.view.View.OnTouchListener;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.example.oldrain.player.fragments.LyricFragment;
 import com.example.oldrain.player.fragments.MoreFragment;
 import com.example.oldrain.player.fragments.MusicHallFragment;
 import com.example.oldrain.player.fragments.SearchFragment;
@@ -38,6 +39,7 @@ public class MainActivity extends FragmentActivity {
     private FragmentManager fragmentManager=getSupportFragmentManager();
     StickIn stickIn;
     MainReceiver mainReceiver;
+    DataBase db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,13 +49,19 @@ public class MainActivity extends FragmentActivity {
         //stickIn.writeToSDcardFile("record.txt", "OldRain", "MainAcitivity Create" + "\n");
         sharedPreferences = getSharedPreferences(MidValue.ShareName, Activity.MODE_PRIVATE);
         MidValue.PLAY_MODEL = sharedPreferences.getInt("PLAYMODEL", MidValue.LOOP_MODEL);
+        MidValue.Cur_Singer = sharedPreferences.getString("CURSINGER", MidValue.Cur_Singer);
+        MidValue.Cur_SongName = sharedPreferences.getString("CURSONGNAME", MidValue.Cur_Singer);
+        MidValue.Cur_SongPath = sharedPreferences.getString("CURSONGPATH", MidValue.Cur_Singer);
+        MidValue.PlayerPosition = sharedPreferences.getInt("PLAYERPOSITION", 0);
 
         TotalListFragment totalListFragment = new TotalListFragment();
         FragmentTransaction total_list_ft = fragmentManager.beginTransaction();
         total_list_ft.add(R.id.homepage, totalListFragment, MidValue.SONG_TAG+"");
         total_list_ft.commit();
 
-        MidValue.local_song = new ArrayList<HashMap<String, Object>>();
+        db = new DataBase(this);
+        MidValue.local_song = db.getData();
+        db.close();
 
         mainReceiver = new MainReceiver();
         IntentFilter filter=new IntentFilter();
@@ -68,36 +76,11 @@ public class MainActivity extends FragmentActivity {
             //tv.setText(intent.getDataString());
         }
 
-        /*int i = 0;
-        DataBase dataBase = new DataBase(this);
-        Cursor cursor = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null,
-                null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
-        if (null != cursor && cursor.getCount() > 0) {
-            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-                i++;
-                //歌曲的名称 ：MediaStore.Audio.Media.TITLE
-                String title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
-                //歌曲的专辑名：MediaStore.Audio.Media.ALBUM
-                String album = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
-                //歌曲的歌手名： MediaStore.Audio.Media.ARTIST
-                String artist = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
-                //歌曲文件的路径 ：MediaStore.Audio.Media.DATA
-                String url = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
-                //歌曲的总播放时长 ：MediaStore.Audio.Media.DURATION
-                int duration = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
-                //歌曲文件的大小 ：MediaStore.Audio.Media.SIZE
-                long size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE));
-                HashMap<String, Object> song = new HashMap<String, Object>();
-                song.put("name", title);
-                song.put("path", url);
-                song.put("playtag", "0");
-                song.put("lovetag", "0");
-                song.put("album", album);
-                song.put("singer", artist);
-                dataBase.saveData(song, "LOCAL");
-            }
+        if(!MidValue.service_run){
+            Intent intents = new Intent(this, MusicPlayer.class);
+            this.startService(intents);
+            MidValue.service_run = true;
         }
-        ToolClass.show(i+"", this);*/
     }
 
     public class MainReceiver extends BroadcastReceiver {
@@ -134,8 +117,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     void changeFragment(int tags, int oldtag){
-        MidValue.frag_tag = tags;
-        MidValue.frag_oldtag = oldtag;
+
         switch (tags){
             case MidValue.SONG_TAG:
                 TotalListFragment totalListFragment = new TotalListFragment();
@@ -177,15 +159,56 @@ public class MainActivity extends FragmentActivity {
                 ToolClass.switchContent(getSupportFragmentManager().findFragmentByTag(oldtag+""),
                         totalListFragment1, MidValue.SONG_TAG, fragmentManager);
                 break;
+            case MidValue.LYRIC:
+                MidValue.FRAG_SWITCH_MODEL = MidValue.UP_OUT_FADE;
+                LyricFragment lyricFragment = new LyricFragment();
+                ToolClass.switchContent(getSupportFragmentManager().findFragmentByTag(oldtag+""),
+                        lyricFragment, MidValue.LYRIC, fragmentManager);
+                MidValue.FRAG_SWITCH_MODEL = MidValue.FADE_IN_OUT;
+                break;
+            case MidValue.LYRIC_BACK:
+                if(MidValue.frag_oldtag == MidValue.SONG_TAG){
+                    TotalListFragment totalListFragment2 = new TotalListFragment();
+                    ToolClass.switchContent(getSupportFragmentManager().findFragmentByTag(MidValue.frag_tag+""),
+                            totalListFragment2, MidValue.SONG_TAG, fragmentManager);
+                }else{
+                    SongListFragment songListFragment5 = new SongListFragment();
+                    ToolClass.switchContent(getSupportFragmentManager().findFragmentByTag(MidValue.frag_tag+""),
+                            songListFragment5, MidValue.frag_oldtag, fragmentManager);
+                }
+                break;
         }
+        MidValue.frag_tag = tags;
+        MidValue.frag_oldtag = oldtag;
     }
 
     private long exitTime =   0;
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
-            if(MidValue.LOVELIST != MidValue.frag_tag && MidValue.LOCALLIST != MidValue.frag_tag &&
-                    MidValue.DOWNLOADLIST != MidValue.frag_tag){
+            if(MidValue.LOVELIST == MidValue.frag_tag || MidValue.LOCALLIST == MidValue.frag_tag ||
+                    MidValue.DOWNLOADLIST == MidValue.frag_tag){
+                TotalListFragment totalListFragment = new TotalListFragment();
+                ToolClass.switchContent(getSupportFragmentManager().findFragmentByTag(MidValue.frag_tag+""),
+                        totalListFragment, MidValue.SONG_TAG, fragmentManager);
+                MidValue.frag_oldtag = MidValue.frag_tag;
+                MidValue.frag_tag = MidValue.SONG_TAG;
+                return true;
+            }else if(MidValue.frag_tag == MidValue.LYRIC) {
+                if(MidValue.frag_oldtag == MidValue.SONG_TAG){
+                    TotalListFragment totalListFragment = new TotalListFragment();
+                    ToolClass.switchContent(getSupportFragmentManager().findFragmentByTag(MidValue.frag_tag+""),
+                            totalListFragment, MidValue.SONG_TAG, fragmentManager);
+                }else{
+                    SongListFragment songListFragment = new SongListFragment();
+                    ToolClass.switchContent(getSupportFragmentManager().findFragmentByTag(MidValue.frag_tag+""),
+                            songListFragment, MidValue.frag_oldtag, fragmentManager);
+                }
+                MidValue.frag_tag = MidValue.frag_oldtag;
+                MidValue.frag_oldtag = MidValue.LYRIC;
+
+                return true;
+            }else{
                 if((System.currentTimeMillis()-exitTime) > 2000){
                     Toast.makeText(getApplicationContext(), "再按一次返回桌面", Toast.LENGTH_SHORT).show();
                     exitTime = System.currentTimeMillis();
@@ -197,13 +220,6 @@ public class MainActivity extends FragmentActivity {
                     return true;
                 }
                 return true;
-            }else{
-                TotalListFragment totalListFragment = new TotalListFragment();
-                ToolClass.switchContent(getSupportFragmentManager().findFragmentByTag(MidValue.frag_tag+""),
-                        totalListFragment, MidValue.SONG_TAG, fragmentManager);
-                MidValue.frag_oldtag = MidValue.frag_tag;
-                MidValue.frag_tag = MidValue.SONG_TAG;
-                return true;
             }
         }
         return super.onKeyDown(keyCode, event);
@@ -213,10 +229,19 @@ public class MainActivity extends FragmentActivity {
     public void onDestroy(){
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("PLAYMODEL", MidValue.PLAY_MODEL);
+        editor.putInt("PLAYERPOSITION", MidValue.PlayerPosition);
+        editor.putString("CURSONGNAME", MidValue.Cur_SongName);
+        editor.putString("CURSINGER", MidValue.Cur_Singer);
+        editor.putString("CURSONGPATH", MidValue.Cur_SongPath);
         editor.apply();
 
         unregisterReceiver(mainReceiver);
         stickIn.writeToSDcardFile("record.txt", "OldRain", "MainAcitivity Destroy" + "\n");
+
+        if(MidValue.PlayedOne){
+            Intent intents = new Intent(this, MusicPlayer.class);
+            this.stopService(intents);
+        }
         super.onDestroy();
     }
 }

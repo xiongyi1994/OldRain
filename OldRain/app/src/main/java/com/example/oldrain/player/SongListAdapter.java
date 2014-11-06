@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -19,8 +20,9 @@ import java.util.HashMap;
  */
 class ViewHolder {
     //public RelativeLayout item_layout;
+    public LinearLayout total_more;
     public RelativeLayout items;
-    public ImageButton favor_tag;
+    public ImageButton favor_tag, song_more, delete, song_detail;
     public TextView song_name;
     public TextView singer;
     public Button play_tag;
@@ -81,7 +83,11 @@ public class SongListAdapter extends BaseAdapter{
             holder.song_name = (TextView) convertView.findViewById(item_ids[1]);
             holder.singer = (TextView) convertView.findViewById(item_ids[2]);
             holder.favor_tag = (ImageButton) convertView.findViewById(item_ids[3]);
+            holder.song_more = (ImageButton) convertView.findViewById(R.id.list_more);
+            holder.delete = (ImageButton) convertView.findViewById(R.id.delete);
+            holder.song_detail = (ImageButton) convertView.findViewById(R.id.song_detail);
             holder.items = (RelativeLayout) convertView.findViewById(R.id.song_list_items);
+            holder.total_more = (LinearLayout) convertView.findViewById(R.id.song_more_linear);
 
             convertView.setTag(holder);
         } else {
@@ -117,11 +123,44 @@ public class SongListAdapter extends BaseAdapter{
                 item_contents.set(position, song);
                 dataBase.updataData(lovetag.equals("0")?"1":"0", "lovetag",
                         item_contents.get(position).get("path").toString());
-
+                dataBase.close();
                 notifyDataSetChanged();
             }
         });
 
+        holder.total_more.setVisibility(View.GONE);
+        final ViewHolder finalHolder = holder;
+        holder.song_more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(finalHolder.total_more.getVisibility() == View.VISIBLE)
+                    finalHolder.total_more.setVisibility(View.GONE);
+                else
+                    finalHolder.total_more.setVisibility(View.VISIBLE);
+                ToolClass.show("more", contexts);
+            }
+        });
+
+        holder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DataBase dataBase = new DataBase(contexts);
+                dataBase.deleteData(item_contents.get(position).get("name").toString(),
+                        item_contents.get(position).get("path").toString());
+                dataBase.close();
+
+                MidValue.local_song.remove(position);
+                notifyDataSetChanged();
+                ToolClass.show("delete", contexts);
+            }
+        });
+
+        holder.song_detail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ToolClass.show("detail", contexts);
+            }
+        });
         return convertView;
     }
 }

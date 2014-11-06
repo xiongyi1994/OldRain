@@ -72,13 +72,15 @@ public class MusicPlayer extends Service {
                     case MidValue.LOOP_MODEL:
                         if(MidValue.PlayerPosition != (MidValue.local_song.size()-1)){
                             path = MidValue.local_song.get(MidValue.PlayerPosition + 1).get("path").toString();
+                            MidValue.PlayerPosition = MidValue.PlayerPosition + 1;
                         } else {
                             path = MidValue.local_song.get(0).get("path").toString();
+                            MidValue.PlayerPosition = 0;
                         }
-                        MidValue.PlayerPosition = MidValue.PlayerPosition + 1;
                         break;
                 }
-
+                if (MidValue.PLAY_MODEL != MidValue.JUSTONE_MODEL)
+                    ToolClass.changeCurSongInfo(MidValue.PlayerPosition);
                 if(MidValue.PLAY_MODEL != MidValue.JUSTONE_MODEL){
                     try {
                         player.setDataSource(path);
@@ -103,13 +105,22 @@ public class MusicPlayer extends Service {
             tag = bundle.getString("tag");
 
             if(tag.equals("play")){
-                if(!player.isPlaying()){
-                    /*try{
+                if(!MidValue.PlayedOne){
+                    for(int i=0; i<MidValue.local_song.size(); i++){
+                        if(MidValue.local_song.get(i).get("path").equals(MidValue.Cur_SongPath)){
+                            MidValue.PlayerPosition = i;
+                            break;
+                        }
+                    }
+                    try{
                         player.setDataSource(path);
                         player.prepare();
                     }catch (Exception e){
                         e.printStackTrace();
-                    }*/
+                    }
+                    player.start();
+                    MidValue.PlayedOne = true;
+                }else if(!player.isPlaying()){
                     player.start();
                 }
             } else if(tag.equals("pause")){

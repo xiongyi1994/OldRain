@@ -28,6 +28,35 @@ public class SongManager {
         dataBase = new DataBase(context);
     }
 
+    public void refreshFromSysDB(){
+        Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null,
+                null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+        if (null != cursor && cursor.getCount() > 0) {
+            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                //歌曲的名称 ：MediaStore.Audio.Media.TITLE
+                String title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
+                //歌曲的专辑名：MediaStore.Audio.Media.ALBUM
+                String album = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
+                //歌曲的歌手名： MediaStore.Audio.Media.ARTIST
+                String artist = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
+                //歌曲文件的路径 ：MediaStore.Audio.Media.DATA
+                String url = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
+                //歌曲的总播放时长 ：MediaStore.Audio.Media.DURATION
+                int duration = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
+                //歌曲文件的大小 ：MediaStore.Audio.Media.SIZE
+                long size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE));
+                HashMap<String, Object> song = new HashMap<String, Object>();
+                song.put("name", title);
+                song.put("path", url);
+                song.put("playtag", "0");
+                song.put("lovetag", "0");
+                song.put("album", album);
+                song.put("singer", artist);
+                dataBase.saveData(song);
+            }
+        }
+        dataBase.close();
+    }
     public ArrayList<HashMap<String, Object>> oneKey(File filePath, String temp){
         ArrayList<HashMap<String, Object>> songLists = new ArrayList<HashMap<String, Object>>();
         songLists = search(filePath, temp);
