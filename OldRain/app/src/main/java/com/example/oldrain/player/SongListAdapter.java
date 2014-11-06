@@ -95,12 +95,17 @@ public class SongListAdapter extends BaseAdapter{
         }
         holder.singer.setText(item_contents.get(position).get("singer").toString());
         holder.song_name.setText(item_contents.get(position).get("name").toString());
-        if(item_contents.get(position).get("playtag").equals("0")){  //0：未播放；1：播放中；2：未拥有
+        /*if(item_contents.get(position).get("playtag").equals("0")){  //0：未播放；1：播放中；2：未拥有
             holder.play_tag.setBackgroundColor(contexts.getResources().getColor(R.color.transparent));
         }else if(item_contents.get(position).get("playtag").equals("1")){
             holder.play_tag.setBackgroundColor(contexts.getResources().getColor(R.color.loved));
         }else{
             holder.play_tag.setBackgroundColor(contexts.getResources().getColor(R.color.download_false));
+        }*/
+        if(item_contents.get(position).get("path").equals(MidValue.Cur_SongPath)){
+            holder.play_tag.setBackgroundColor(contexts.getResources().getColor(R.color.loved));
+        }else{
+            holder.play_tag.setBackgroundColor(contexts.getResources().getColor(R.color.transparent));
         }
         if(item_contents.get(position).get("lovetag").equals("1")){
             holder.favor_tag.setImageDrawable(contexts.getResources().getDrawable(R.drawable.favor_true));
@@ -137,7 +142,6 @@ public class SongListAdapter extends BaseAdapter{
                     finalHolder.total_more.setVisibility(View.GONE);
                 else
                     finalHolder.total_more.setVisibility(View.VISIBLE);
-                ToolClass.show("more", contexts);
             }
         });
 
@@ -150,6 +154,7 @@ public class SongListAdapter extends BaseAdapter{
                 dataBase.close();
 
                 MidValue.local_song.remove(position);
+                MidValue.TotalSongCount--;
                 notifyDataSetChanged();
                 ToolClass.show("delete", contexts);
             }

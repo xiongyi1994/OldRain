@@ -19,6 +19,7 @@ import java.util.HashMap;
 
 /**
  * Created by Administrator on 14-7-23.
+ * Tool Class
  */
 public class ToolClass {
 
@@ -69,6 +70,15 @@ public class ToolClass {
             flag = true;
         }
         return flag;
+    }
+
+    public static int getLovedSongCount(){
+        int count = 0, list_size = MidValue.local_song.size();
+        for(int i=0; i<list_size; i++){
+            if(MidValue.local_song.get(i).get("lovetag").equals("1"))
+                count++;
+        }
+        return count;
     }
 
     public static void changeCurSongInfo(int position){

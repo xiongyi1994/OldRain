@@ -204,20 +204,6 @@ public class SongListFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-
-
-        if(!MidValue.local_song.get(position).get("path").equals(MidValue.Cur_SongPath)){
-            if(MidValue.PlayedOne){
-                changePlayTag(position, true);
-
-                if(MidValue.PlayerPosition < MidValue.local_song.size())
-                    changePlayTag(MidValue.PlayerPosition, false);
-            }else{
-                changePlayTag(position, true);
-            }
-            listItemAdapter.notifyDataSetChanged();
-        }/**/
-
         if(!MidValue.local_song.get(position).get("path").equals(MidValue.Cur_SongPath)){
             Intent intent = new Intent();
             intent.putExtra("path", MidValue.local_song.get(position).get("path").toString());
@@ -255,22 +241,10 @@ public class SongListFragment extends ListFragment {
         ToolClass.changeCurSongInfo(position);
         song_name.setText(MidValue.Cur_SongName);
         singer.setText(MidValue.Cur_Singer);
+
+        listItemAdapter.notifyDataSetChanged();
     }
 
-    void changePlayTag(int position, boolean toTrue){
-        HashMap<String, Object> song = new HashMap<String, Object>();
-        song.put("name", MidValue.local_song.get(position).get("name"));
-        song.put("singer", MidValue.local_song.get(position).get("singer"));
-        if(toTrue){
-            song.put("playtag", "1");
-        }else{
-            song.put("playtag", "0");
-        }
-        song.put("path", MidValue.local_song.get(position).get("path"));
-        song.put("album", MidValue.local_song.get(position).get("album"));
-        song.put("lovetag", MidValue.local_song.get(position).get("lovetag"));
-        MidValue.local_song.set(position, song);
-    }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

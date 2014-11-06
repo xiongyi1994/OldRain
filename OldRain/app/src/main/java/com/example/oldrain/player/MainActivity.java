@@ -62,10 +62,11 @@ public class MainActivity extends FragmentActivity {
         db = new DataBase(this);
         MidValue.local_song = db.getData();
         db.close();
+        MidValue.TotalSongCount = MidValue.local_song.size();
 
         mainReceiver = new MainReceiver();
         IntentFilter filter=new IntentFilter();
-        filter.addAction("com.example.oldrain.player.MainActivity");
+        filter.addAction(MidValue.BroadToMain);
         registerReceiver(mainReceiver, filter);
 
         Intent intent = getIntent();
@@ -87,10 +88,31 @@ public class MainActivity extends FragmentActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
-            MidValue.frag_tag = bundle.getInt("tag");
-            MidValue.frag_oldtag = bundle.getInt("oldtag");
-            if(MidValue.frag_oldtag != MidValue.frag_tag){
-                changeFragment(MidValue.frag_tag, MidValue.frag_oldtag);
+            int tag = bundle.getInt(MidValue.BroadTag);
+            int oldtag = bundle.getInt(MidValue.BroadOldTag);
+            if(oldtag != tag){
+                changeFragment(tag, oldtag);
+            }else if(tag == MidValue.RefreshFragTag){
+                FragmentTransaction total_list_ft = fragmentManager.beginTransaction();
+
+                switch (MidValue.frag_tag){
+                    case MidValue.SONG_TAG:
+                        TotalListFragment totalListFragment = new TotalListFragment();
+                        total_list_ft.remove(getSupportFragmentManager().findFragmentByTag(MidValue.frag_tag+""));
+                        total_list_ft.add(R.id.homepage, totalListFragment, MidValue.SONG_TAG+"");
+                        total_list_ft.commit();
+                        break;
+                    case MidValue.LOCALLIST:
+                    case MidValue.LOVELIST:
+                    case MidValue.DOWNLOADLIST:
+                        SongListFragment songListFragment = new SongListFragment();
+                        total_list_ft.remove(getSupportFragmentManager().findFragmentByTag(MidValue.frag_tag+""));
+                        total_list_ft.add(R.id.homepage, songListFragment, MidValue.frag_tag+"");
+                        total_list_ft.commit();
+                        break;
+                    case MidValue.LYRIC:
+                        break;
+                }
             }
         }
     }

@@ -11,6 +11,7 @@ public class MidValue {
     public static boolean Playing = false;
     public static boolean PlayedOne = false;
     public static boolean service_run = false;
+    public static int TotalSongCount;
 
     final public static  String DB_NAME = "oldrain";
 
@@ -34,4 +35,7 @@ public class MidValue {
 
     public static String Cur_SongName = "unknown", Cur_Singer = "unknown", Cur_SongPath = "unknown";
 
+    final public static int RefreshFragTag = -5;
+    final public static String BroadToMain = "com.example.oldrain.player.MainActivity",
+            BroadToService = "com.example.oldrain.player.MusicPlayer", BroadTag = "tag", BroadOldTag = "oldtag";
 }

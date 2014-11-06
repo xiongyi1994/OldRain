@@ -35,13 +35,15 @@ public class TotalListFragment extends ListFragment{
     private ImageButton song_list_button, music_hall_button, search_button, more_button, song_image,
             play_pause;
     private TextView song_list_text, music_hall_text, search_text, more_text, song_name, singer;;
-
+    ArrayList<HashMap<String, Object>> total_list;
     @Override
     public void onAttach(Activity activity){
         super.onAttach(activity);
         stickIn = new StickIn("just");
         //stickIn.writeToSDcardFile("record.txt", "OldRain", "Totalfragment Attach\n");
         home_activity=activity;
+
+        total_list = getData();
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,7 +51,7 @@ public class TotalListFragment extends ListFragment{
         //stickIn.writeToSDcardFile("record.txt", "OldRain", "Totalfragmetn Create" + "\n");
 
         //生成适配器的Item和动态数组对应的元素
-        SimpleAdapter listItemAdapter= new SimpleAdapter(home_activity, getData(),//数据源
+        SimpleAdapter listItemAdapter= new SimpleAdapter(home_activity, total_list,//数据源
                 R.layout.total_item_layout,//ListItem的XML实现
                 //动态数组与ImageItem对应的子项
                 new String[] {"icon", "list_name", "song_num"},
@@ -112,17 +114,17 @@ public class TotalListFragment extends ListFragment{
 
         map.put("icon", R.drawable.i_like);
         map.put("list_name", "我喜欢");
-        map.put("song_num", "未知");
+        map.put("song_num", ToolClass.getLovedSongCount()+"首");
         listItem.add(map);
 
         map1.put("icon", R.drawable.music_all);
         map1.put("list_name", "本地歌曲");
-        map1.put("song_num", "未知");
+        map1.put("song_num", MidValue.TotalSongCount+"首");
         listItem.add(map1);
 
         map2.put("icon", R.drawable.downloaded);
         map2.put("list_name", "已下载");
-        map2.put("song_num", "未知");
+        map2.put("song_num", MidValue.TotalSongCount+"首");
         listItem.add(map2);
 
         return listItem;

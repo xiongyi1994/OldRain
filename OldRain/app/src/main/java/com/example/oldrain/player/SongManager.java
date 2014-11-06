@@ -29,6 +29,7 @@ public class SongManager {
     }
 
     public void refreshFromSysDB(){
+        MidValue.TotalSongCount = 0;
         Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null,
                 null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
         if (null != cursor && cursor.getCount() > 0) {
@@ -53,6 +54,7 @@ public class SongManager {
                 song.put("album", album);
                 song.put("singer", artist);
                 dataBase.saveData(song);
+                MidValue.TotalSongCount++;
             }
         }
         dataBase.close();

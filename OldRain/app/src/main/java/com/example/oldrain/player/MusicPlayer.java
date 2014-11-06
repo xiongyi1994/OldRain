@@ -79,9 +79,15 @@ public class MusicPlayer extends Service {
                         }
                         break;
                 }
-                if (MidValue.PLAY_MODEL != MidValue.JUSTONE_MODEL)
-                    ToolClass.changeCurSongInfo(MidValue.PlayerPosition);
                 if(MidValue.PLAY_MODEL != MidValue.JUSTONE_MODEL){
+                    ToolClass.changeCurSongInfo(MidValue.PlayerPosition);
+                    if(MidValue.PLAY_MODEL != MidValue.ONELOOP_MODEL) {
+                        Intent intent = new Intent();
+                        intent.putExtra(MidValue.BroadTag, MidValue.RefreshFragTag);
+                        intent.putExtra(MidValue.BroadOldTag, MidValue.RefreshFragTag);
+                        intent.setAction(MidValue.BroadToMain);
+                        getApplicationContext().sendBroadcast(intent);
+                    }
                     try {
                         player.setDataSource(path);
                         player.prepare();
